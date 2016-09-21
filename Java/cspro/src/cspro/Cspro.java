@@ -56,6 +56,9 @@ public class Cspro {
         
         PrintStream ps = System.out;
         
+        ps.println("CREATE SCHEMA `"+mainSchema+"`;");
+        ps.println();
+        
         for (Record record : records) {
             ps.println("CREATE TABLE "+mainSchema+"."+record.getName()+" (");
             ps.println("    ID INT(9) UNSIGNED AUTO_INCREMENT,");
