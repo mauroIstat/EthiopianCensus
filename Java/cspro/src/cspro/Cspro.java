@@ -57,19 +57,20 @@ public class Cspro {
         
         for (Record record : records) {
             ps.println("CREATE TABLE "+record.getName()+" (");
-            ps.println("    ID NUMBER(9,0),");
+            ps.println("    ID INT(9) UNSIGNED AUTO_INCREMENT,");
             if (!mainClass.equals(record.getName())) {
-                ps.println("    "+mainClass+" NUMBER(9,0),");
+                ps.println("    "+mainClass+" INT(9) UNSIGNED,");
+                ps.println("    COUNTER INT(9) UNSIGNED,");
             }
             for (Item item : record.getItems()) {
                 String name = item.getName().toUpperCase();
                 int length = item.getLength();
                 switch (item.getType()) {
                     case "Alpha":
-                        ps.println("    "+name+" CHAR("+length+" CHAR),");
+                        ps.println("    "+name+" CHAR("+length+"),");
                         break;
                     case "Number":
-                        ps.println("    "+name+" NUMBER("+length+",0),");
+                        ps.println("    "+name+" INT("+length+"),");
                         break;
                     default:
                         ps.println(" data type unknown - "+item.getType());
