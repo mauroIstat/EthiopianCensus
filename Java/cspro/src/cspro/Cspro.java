@@ -15,6 +15,7 @@ import java.util.List;
 public class Cspro {
 
     public static void main(String[] args) throws Exception {
+        String mainSchema = "ethiopian_census";
         String mainClass = "LESOTHO";
         List<Record> records = new LinkedList<>();
         try (InputStream in = Cspro.class.getResourceAsStream("LesothoCensus2016.dcf")) {
@@ -56,11 +57,11 @@ public class Cspro {
         PrintStream ps = System.out;
         
         for (Record record : records) {
-            ps.println("CREATE TABLE "+record.getName()+" (");
+            ps.println("CREATE TABLE "+mainSchema+"."+record.getName()+" (");
             ps.println("    ID INT(9) UNSIGNED AUTO_INCREMENT,");
             if (!mainClass.equals(record.getName())) {
-                ps.println("    "+mainClass+" INT(9) UNSIGNED,");
-                ps.println("    COUNTER INT(9) UNSIGNED,");
+                ps.println("    "+mainClass+" INT(9) UNSIGNED NOT NULL,");
+                ps.println("    COUNTER INT(9) UNSIGNED NOT NULL,");
             }
             for (Item item : record.getItems()) {
                 String name = item.getName().toUpperCase();
@@ -76,8 +77,12 @@ public class Cspro {
                         ps.println(" data type unknown - "+item.getType());
                 }
             }
+            if (!mainClass.equals(record.getName())) {
+                ps.println("    INDEX ("+mainClass+"),");
+                ps.println("    FOREIGN KEY ("+mainClass+") REFERENCES "+mainSchema+"."+mainClass+"(id),");
+            }
             ps.println("    PRIMARY KEY (ID)");
-            ps.println(")");
+            ps.println(") ENGINE=INNODB;");
             ps.println();
         }
     }
